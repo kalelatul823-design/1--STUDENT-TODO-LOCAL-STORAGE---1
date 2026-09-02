@@ -26,9 +26,9 @@ const stdInfo = document.getElementById("stdInfo");
 //     }
 // ]
 
-//localStorage.setItem("stdArr", JSON.stringify(stdArr));
+// localStorage.setItem("stdArr", JSON.stringify(stdArr));
 
-let stdArr = JSON.parse(localStorage.getItem("stdArr"));
+let stdArr = JSON.parse(localStorage.getItem("stdArr")) || [];
 cl(stdArr);
 
 function showUi(arr) {
@@ -82,67 +82,82 @@ function create(NEW_STD) {
                         ></i>
                       </td>`;
   stdInfo.append(tr);
+  Swal.fire({
+    title: `This Student is created successfully`,
+    icon: "success",
+    timer: 3000,
+  });
 }
 
 //remove
 function onRemove(ele) {
-  let getConfirm = confirm('Are you sure to remove this student ?')
-  if(getConfirm){
-  let REMOVE_ID = ele.dataset.removeid;
-  cl(REMOVE_ID);
+  let getConfirm = confirm("Are you sure to remove this student ?");
+  if (getConfirm) {
+    let REMOVE_ID = ele.dataset.removeid;
+    cl(REMOVE_ID);
 
-  let getIndex = stdArr.findIndex((ele) => ele.id === REMOVE_ID);
-  cl(getIndex);
-  stdArr.splice(getIndex, 1);
-  ele.closest("tr").remove();
-  localStorage.setItem("stdArr", JSON.stringify(stdArr));
-  let td = [...document.querySelectorAll("#stdInfo tr td:first-child")]
-  td.forEach((ele, i)=> {
-    ele.innerText = i + 1
-  })
+    let getIndex = stdArr.findIndex((ele) => ele.id === REMOVE_ID);
+    cl(getIndex);
+    stdArr.splice(getIndex, 1);
+    ele.closest("tr").remove();
+    localStorage.setItem("stdArr", JSON.stringify(stdArr));
+    let td = [...document.querySelectorAll("#stdInfo tr td:first-child")];
+    td.forEach((ele, i) => {
+      ele.innerText = i + 1;
+    });
+    Swal.fire({
+      title: `This Student is created successfully`,
+      icon: "success",
+      timer: 3000,
+    });
   }
 }
 
 //edit
-function onEdit(ele){
-    let EDIT_ID = ele.dataset.editid;
-    cl(EDIT_ID);
-    let EDIT_OBJ = stdArr.find((ele)=> ele.id === EDIT_ID);
-    cl(EDIT_OBJ)
-    fnameControl.value = EDIT_OBJ.fname;
-    lnameControl.value = EDIT_OBJ.lname;
-    contactControl.value = EDIT_OBJ.contact;
-    emailControl.value = EDIT_OBJ.email;
-    updateBtn.classList.remove('d-none');
-    submitBtn.classList.add('d-none')
-    localStorage.setItem("EDIT_ID", EDIT_ID)
+function onEdit(ele) {
+  let EDIT_ID = ele.dataset.editid;
+  cl(EDIT_ID);
+  let EDIT_OBJ = stdArr.find((ele) => ele.id === EDIT_ID);
+  cl(EDIT_OBJ);
+  fnameControl.value = EDIT_OBJ.fname;
+  lnameControl.value = EDIT_OBJ.lname;
+  contactControl.value = EDIT_OBJ.contact;
+  emailControl.value = EDIT_OBJ.email;
+  updateBtn.classList.remove("d-none");
+  submitBtn.classList.add("d-none");
+  localStorage.setItem("EDIT_ID", EDIT_ID);
 }
 
-function onUpdate(eve){
-    let UPDATE_ID = localStorage.getItem("EDIT_ID");
-    cl(UPDATE_ID);
-    
-    let getIndex = stdArr.findIndex(ele => ele.id === UPDATE_ID);
+function onUpdate(eve) {
+  let UPDATE_ID = localStorage.getItem("EDIT_ID");
+  cl(UPDATE_ID);
 
-   let UPDATE_OBJ = {
-     id: UPDATE_ID,
+  let getIndex = stdArr.findIndex((ele) => ele.id === UPDATE_ID);
+
+  let UPDATE_OBJ = {
+    id: UPDATE_ID,
     fname: fnameControl.value,
     lname: lnameControl.value,
     contact: contactControl.value,
     email: emailControl.value,
-    }
+  };
 
-    stdArr[getIndex] = UPDATE_OBJ;
-    localStorage.setItem("stdArr", JSON.stringify(stdArr));
-    let tr = document.getElementById(UPDATE_ID).children;
-   
-   tr[1].innerText = UPDATE_OBJ.fname;
-   tr[2].innerText = UPDATE_OBJ.lname;
-   tr[3].innerText = UPDATE_OBJ.contact;
-   tr[4].innerText = UPDATE_OBJ.email;
-    updateBtn.classList.add('d-none');
-    submitBtn.classList.remove('d-none')
+  stdArr[getIndex] = UPDATE_OBJ;
+  localStorage.setItem("stdArr", JSON.stringify(stdArr));
+  let tr = document.getElementById(UPDATE_ID).children;
 
+  tr[1].innerText = UPDATE_OBJ.fname;
+  tr[2].innerText = UPDATE_OBJ.lname;
+  tr[3].innerText = UPDATE_OBJ.contact;
+  tr[4].innerText = UPDATE_OBJ.email;
+  updateBtn.classList.add("d-none");
+  submitBtn.classList.remove("d-none");
+  stdForm.reset();
+  Swal.fire({
+    title: `This Student is updated successfully`,
+    icon: "success",
+    timer: 3000,
+  });
 }
 
 //funtion
@@ -166,4 +181,4 @@ function onSubmit(eve) {
 }
 
 stdForm.addEventListener("submit", onSubmit);
-updateBtn.addEventListener('click', onUpdate)
+updateBtn.addEventListener("click", onUpdate);
